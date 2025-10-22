@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Visualizer</title>
+  <style>
+    body {
+      margin: 0;
+      background: #121212;
+      color: white;
+      font-family: sans-serif;
+      display: flex;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #info {
+      display: flex;
+      align-items: center;
+      margin-left: 20px;
+      z-index: 1;
+    }
+
+    #album-art {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      margin-right: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+
+    #track-details {
+      display: flex;
+      flex-direction: column;
+    }
+
+    #track-details h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    #track-details p {
+      margin: 5px 0 0 0;
+      font-size: 18px;
+      color: #aaa;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="info">
+    <img id="album-art" src="" alt="Album Art">
+    <div id="track-details">
+      <h2 id="track-name">Track Name</h2>
+      <p id="artist-name">Artist Name</p>
+    </div>
+  </div>
+  <canvas id="visualizer"></canvas>
+  <script src="visualizer.js"></script>
+</body>
+</html>
