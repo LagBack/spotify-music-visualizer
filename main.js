@@ -39,7 +39,7 @@ ipcMain.on('spotify-login', () => {
       width: 450,
       height: 700,
       show: true,
-      webPreferences: { nodeIntegration: false, contextIsolation: true }
+      webPreferences: { nodeIntegration: false, contextIsolation: true, }
     });
 
     authWindow.loadURL(authUrl);

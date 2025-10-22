@@ -1,16 +1,18 @@
 const { ipcRenderer } = require('electron');
 
-let spotifyToken = null;
+const artistBg = document.getElementById('artist-bg');
+const albumCover = document.getElementById('album-cover');
+const songName = document.getElementById('song-name');
+const artistName = document.getElementById('artist-name');
 
-const albumArtEl = document.getElementById('album-art');
-const trackNameEl = document.getElementById('track-name');
-const artistNameEl = document.getElementById('artist-name');
+let spotifyToken = null;
 
 ipcRenderer.on('spotify-token', (_, token) => {
     spotifyToken = token;
-    startVisualizer();
+    console.log('Received Spotify token:', spotifyToken);
+
     fetchNowPlaying();
-    setInterval(fetchNowPlaying, 5000); // poll every 5 seconds
+    setInterval(fetchNowPlaying, 5000);
 });
 
 async function fetchNowPlaying() {
@@ -21,60 +23,32 @@ async function fetchNowPlaying() {
             headers: { 'Authorization': `Bearer ${spotifyToken}` }
         });
 
-        if (res.status === 204) return; // no track playing
-        if (!res.ok) {
-            console.error('Spotify API error:', res.status, await res.text());
+        if (res.status === 204 || res.status === 202) {
+            console.log('No track playing');
             return;
         }
 
+        if (!res.ok) {
+            throw new Error(`${res.status} ${res.statusText}`);
+        }
+
         const data = await res.json();
-
-        const trackName = data.item.name;
-        const artistName = data.item.artists.map(a => a.name).join(', ');
-        const albumArt = data.item.album.images[0].url;
-
-        albumArtEl.src = albumArt;
-        trackNameEl.textContent = trackName;
-        artistNameEl.textContent = artistName;
-
-        updateVisualizer(data.progress_ms, data.item.duration_ms);
-
+        if (data && data.item) {
+            updateVisualizer(data.item);
+        }
     } catch (err) {
-        console.error('Error fetching now playing:', err);
+        console.error('Spotify API error:', err);
     }
 }
 
-const canvas = document.getElementById('visualizer');
-const ctx = canvas.getContext('2d');
+function updateVisualizer(trackData) {
+    songName.textContent = trackData.name;
+    artistName.textContent = trackData.artists.map(a => a.name).join(', ');
+    albumCover.src = trackData.album.images[0].url;
 
-function startVisualizer() {
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-    animate();
-}
-
-function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
-
-let barCount = 64;
-let animationFrame;
-
-function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    const time = Date.now() / 300;
-    for (let i = 0; i < barCount; i++) {
-        const x = (canvas.width / barCount) * i;
-        const barHeight = Math.abs(Math.sin(time + i / 5)) * canvas.height * 0.5;
-        ctx.fillStyle = `hsl(${i * 6}, 80%, 50%)`;
-        ctx.fillRect(x, canvas.height - barHeight, (canvas.width / barCount) - 2, barHeight);
+    if (trackData.artists[0].images && trackData.artists[0].images.length > 0) {
+        artistBg.src = trackData.artists[0].images[0].url;
+    } else {
+        artistBg.src = trackData.album.images[0].url;
     }
-
-    animationFrame = requestAnimationFrame(animate);
-}
-
-
-function updateVisualizer(progress, duration) {
 }
