@@ -6,7 +6,7 @@ A sleek **desktop music visualizer** built with **Electron** that displays your 
 
 | | |
 |--------|--------|
-| ![Demo1](demoss.png) | ![Demo2](demoss2.png) |
+| ![Demo1](assets/demoss.png) | ![Demo2](assets/demoss2.png) |
 
 ---
 
