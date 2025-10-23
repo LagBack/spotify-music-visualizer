@@ -4,10 +4,8 @@ A sleek **desktop music visualizer** built with **Electron** that displays your 
 
 ## Screenshots
 
-| | |
-|--------|--------|
-| ![Demo1](assets/demoss.png) | ![Demo2](assets/demoss2.png) |
-
+<img src="assets/demoss.png" alt="demoscreenshot" width="500"/> <img src="assets/demoss2.png" alt="demoscreenshot2" width="500"/> 
+ 
 ---
 
 # Setup and Installing
